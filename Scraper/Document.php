@@ -241,6 +241,12 @@ class Document {
                 if ($quoteChar != '*') $skip++;
                 continue;
             }
+            if ($in == 'attr' && ($c == ' ' || $c == "\t" || $c == "\n")) {
+            	if(strlen(trim($attr)))
+	                $thisEl->setAttribute(trim($attr), true);
+                $attr = '';
+                continue;
+            }
             if ($in == 'xattr' && $c == '=') {
                 $in = 'xval';
                 $xval = '';

@@ -14,12 +14,12 @@ class Scraper {
 	private $info;
 	private $lastAttemptedAddress;
 
-	function __construct($ckFile=null) {
-		if(isset($ckFile) && !empty($ckFile))
+	function __construct($ckFile=false) {
+		if($ckFile)
 			$this->cookieTemp = $ckFile;
 		else
 			$this->cookieTemp = tempnam(sys_get_temp_dir(),'Scraper');
-
+			
 		$this->cURL = curl_init();
 		$this->opt(CURLOPT_RETURNTRANSFER, 1);
 		$this->opt(CURLOPT_FOLLOWLOCATION, 1);
@@ -31,6 +31,10 @@ class Scraper {
 		$this->opt(CURLOPT_FRESH_CONNECT, TRUE);
 		$this->opt(CURLOPT_FORBID_REUSE, TRUE);
 		$this->opt(CURLOPT_USERAGENT, "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/534.55.3 (KHTML, like Gecko) Version/5.1.5 Safari/534.55.3");
+	}
+	
+	function authenticate($user, $pass) {
+		$this->opt(CURLOPT_USERPWD, "$user:$pass");
 	}
 	
 	function error() {
@@ -214,7 +218,7 @@ class Scraper {
 	function currentURL() {
 		return $this->currLocation;
 	}
-
+	
 	function __destruct() {
 		curl_close($this->cURL);
 	}
